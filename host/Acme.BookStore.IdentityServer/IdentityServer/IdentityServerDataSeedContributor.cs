@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using IdentityServer4.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ using Volo.Abp.IdentityServer.Clients;
 using Volo.Abp.IdentityServer.IdentityResources;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.Uow;
+using ApiResource = Volo.Abp.IdentityServer.ApiResources.ApiResource;
+using Client = Volo.Abp.IdentityServer.Clients.Client;
 
 namespace Acme.BookStore.IdentityServer
 {
@@ -120,15 +123,20 @@ namespace Acme.BookStore.IdentityServer
                 );
             }
 
-            //Console Test Client
-            var consoleClientId = configurationSection["BookStore_ConsoleTestApp:ClientId"];
-            if (!consoleClientId.IsNullOrWhiteSpace())
+            //Console Test Client / Angular Client
+            var consoleAndAngularClientId = configurationSection["BookStore_ConsoleTestApp:ClientId"];
+            if (!consoleAndAngularClientId.IsNullOrWhiteSpace())
             {
+                var webClientRootUrl = configurationSection["BookStore_ConsoleTestApp:RootUrl"]?.TrimEnd('/');
+
                 await CreateClientAsync(
-                    consoleClientId,
-                    commonScopes,
-                    new[] { "password", "client_credentials" },
-                    commonSecret
+                    name: consoleAndAngularClientId,
+                    scopes: commonScopes,
+                    grantTypes: new[] { "password", "client_credentials", "authorization_code" },
+                    secret: (configurationSection["BookStore_ConsoleTestApp:ClientSecret"] ?? "1q2w3e*").Sha256(),
+                    requireClientSecret: false,
+                    redirectUri: webClientRootUrl,
+                    postLogoutRedirectUri: webClientRootUrl
                 );
             }
         }
