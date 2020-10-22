@@ -9,20 +9,15 @@ export const environment = {
   },
   oAuthConfig: {
     issuer: 'https://localhost:44396',
+    redirectUri: 'http://localhost:4200',
     clientId: 'BookStore_ConsoleTestApp',
-    dummyClientSecret: '1q2w3e*',
-    scope: 'BookStore',
-    oidc: false,
-    requireHttps: true,
+    responseType: 'code',
+    scope: 'offline_access BookStore',
   },
   apis: {
     default: {
-      url: 'https://localhost:44396',
-      rootNamespace: 'Acme.BookStore',
-    },
-    BookStore: {
       url: 'https://localhost:44312',
       rootNamespace: 'Acme.BookStore',
-    },
+    }
   },
 } as Config.Environment;
