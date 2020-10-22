@@ -14,6 +14,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { APP_ROUTE_PROVIDER } from './route.provider';
 import { ThemeBasicModule } from '@abp/ng.theme.basic';
+import { AsyncPipe } from '@angular/common';
 
 @NgModule({
   imports: [
@@ -34,7 +35,7 @@ import { ThemeBasicModule } from '@abp/ng.theme.basic';
     NgxsModule.forRoot(),
     ThemeBasicModule.forRoot(),
   ],
-  providers: [APP_ROUTE_PROVIDER],
+  providers: [APP_ROUTE_PROVIDER, AsyncPipe],
   declarations: [AppComponent],
   bootstrap: [AppComponent],
 })
