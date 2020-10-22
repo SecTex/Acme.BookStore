@@ -16,6 +16,10 @@ export const environment = {
   },
   apis: {
     default: {
+      url: 'https://localhost:44396',
+      rootNamespace: 'Acme.BookStore',
+    },
+    BookStore: {
       url: 'https://localhost:44312',
       rootNamespace: 'Acme.BookStore',
     }
