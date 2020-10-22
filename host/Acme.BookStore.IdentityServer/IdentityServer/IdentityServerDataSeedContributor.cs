@@ -137,9 +137,12 @@ namespace Acme.BookStore.IdentityServer
             string name,
             IEnumerable<string> scopes,
             IEnumerable<string> grantTypes,
-            string secret,
+            string secret = null,
             string redirectUri = null,
             string postLogoutRedirectUri = null,
+            string frontChannelLogoutUri = null,
+            bool requireClientSecret = true,
+            bool requirePkce = false,
             IEnumerable<string> permissions = null)
         {
             var client = await _clientRepository.FindByCliendIdAsync(name);
@@ -160,7 +163,10 @@ namespace Acme.BookStore.IdentityServer
                         AccessTokenLifetime = 31536000, //365 days
                         AuthorizationCodeLifetime = 300,
                         IdentityTokenLifetime = 300,
-                        RequireConsent = false
+                        RequireConsent = false,
+                        FrontChannelLogoutUri = frontChannelLogoutUri,
+                        RequireClientSecret = requireClientSecret,
+                        RequirePkce = requirePkce
                     },
                     autoSave: true
                 );
@@ -182,9 +188,12 @@ namespace Acme.BookStore.IdentityServer
                 }
             }
 
-            if (client.FindSecret(secret) == null)
+            if (!secret.IsNullOrEmpty())
             {
-                client.AddSecret(secret);
+                if (client.FindSecret(secret) == null)
+                {
+                    client.AddSecret(secret);
+                }
             }
 
             if (redirectUri != null)
